@@ -1,0 +1,39 @@
+# ── 运行时数据（绝对不能提交）──────────────────────────────
+# 用户的 config.json 里有：QQ 号、主人信息、人格设定、黑名单、NapCat 路径
+config.json
+config.json.*
+*.bak
+*.bak-*
+
+# 插件在 DSH 数据目录里生成的一切
+logs/
+memory/
+archive/
+incoming/
+emotion/
+relation/
+memes/
+workspace/
+state.json
+
+# ── 开发产物 ─────────────────────────────────────────────
+node_modules/
+pnpm-lock.yaml
+*.log
+.tmp/
+tmp/
+dist/
+coverage/
+
+# ── 编辑器 / 系统 ────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── 本地私货 ─────────────────────────────────────────────
+# 草稿、实验、只给自己看的备注放这里，不进仓库
+.local/
+_scratch/

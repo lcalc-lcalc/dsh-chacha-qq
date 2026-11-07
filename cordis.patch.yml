@@ -1,0 +1,5 @@
+# dsh-chacha-qq 在 profile 中的插入项。
+# 注意：bundle patch 必须用 insert: 包裹，否则只会去「修改」一个不存在的条目，插件不会被加载。
+- insert:
+    - id: chacha-qq
+      name: 'dsh-chacha-qq'

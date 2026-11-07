@@ -1,0 +1,65 @@
+{
+  "name": "dsh-chacha-qq",
+  "version": "3.0.0",
+  "description": "Give DeepSeek Harness a real QQ identity. Three layers: NapCat adapter / Controller / The Mind (a DSH cut down to plan, tools, subagents and web).",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "qq",
+    "napcat",
+    "onebot",
+    "chatbot",
+    "companion"
+  ],
+  "license": "MIT",
+  "author": "dsh-chacha-qq contributors",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "src",
+    "presets",
+    "docs",
+    "scripts",
+    "README.md",
+    "HANDOFF.md",
+    "LICENSE",
+    "!**/*.bak",
+    "!**/*.bak-*",
+    "!**/.local",
+    "!**/_scratch"
+  ],
+  "scripts": {
+    "test": "node tests/run-all.mjs",
+    "probe:client": "node scripts/probe-client.mjs",
+    "probe:qq": "node scripts/probe-qq-status.mjs",
+    "probe:inbound": "node scripts/probe-inbound.mjs",
+    "probe:moderation": "node scripts/probe-moderation.mjs",
+    "persona": "node scripts/apply-persona-preset.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-sidebar"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

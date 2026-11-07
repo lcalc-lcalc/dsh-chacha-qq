@@ -1,0 +1,22 @@
+# 统一行尾：仓库里一律 LF，不因为谁在 Windows 上开发就改成 CRLF。
+#
+# 为什么要显式写：.gitignore 里已经说明「文件一律 UTF-8 无 BOM」，
+# 但行尾没管的话，Windows 上 `git add` 会把手上的 LF 转成 CRLF 提交，
+# 别人 checkout 又转回来 —— 结果就是「本地测试全绿、CI 报 BOM/行尾问题」，
+# 或者更糟：DSH 读到带 CRLF 的 json 也能跑，但 diff 永远很脏。
+* text=auto eol=lf
+
+# Windows 专用脚本保留 CRLF（某些 cmd/powershell 场景对 LF 不友好）
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# 二进制文件不做任何转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.zip binary
+*.tgz binary
