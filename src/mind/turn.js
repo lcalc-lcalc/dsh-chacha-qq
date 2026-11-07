@@ -92,7 +92,7 @@ export class Mind {
    * @param {object} [options.emotion]    { renderForMind() }
    * @param {object} [options.qqTools]    { register(agentCtx, sessionId, role) }
    */
-  constructor({ ctx, store, log, memory, emotion, life, meme, qqTools }) {
+  constructor({ ctx, store, log, memory, emotion, life, meme, qqTools, eggs }) {
     this.ctx = ctx
     this.store = store
     this.log = log
@@ -103,6 +103,8 @@ export class Mind {
     /** 表情包系统（提供「有哪些类别、什么时候用」的说明） */
     this.meme = meme
     this.qqTools = qqTools
+    /** 🥚 彩蛋模块（深夜关怀等）。没加载也能跑 —— 所有调用都走 ?. */
+    this.eggs = eggs ?? null
 
     /** sessionId -> { handle, role, mode, provider, model, tags, queue, startedAt } */
     this.live = new Map()
@@ -440,6 +442,28 @@ export class Mind {
     } catch (error) {
       this.log.warn('取表情包说明失败（跳过）：', error)
     }
+
+    // 🥚 深夜关怀：凌晨 2~5 点、概率 8% 才说一句。
+    //    为什么放在动态 context 而不是替模型写回复：
+    //    这样她「知道现在很晚了」，怎么表达由她自己决定。
+    //    每次都强行塞一句关心的话，就变成唠叨了，不是彩蛋。
+    try {
+      const eggs = this.eggs ?? null
+      if (eggs?.maybeNightCare) {
+        const store = this.store.get()
+        const care = eggs.maybeNightCare({
+          enabled: eggs.eggsEnabled ? eggs.eggsEnabled(store) : true,
+          probability: Number(store?.fun?.nightCareProbability ?? 0.08),
+        })
+        if (care) {
+          parts.push(`（现在很晚了。你心里冒出一句「${care}」—— 想说的话就顺口说出来，不想说就算了。）`)
+          this.log.debug(`深夜关怀触发：${care}`)
+        }
+      }
+    } catch (error) {
+      this.log.debug('彩蛋跳过：', error?.message ?? error)
+    }
+
     return parts.join('\n\n')
   }
 

@@ -71,6 +71,11 @@ class Runtime {
     const log = this.log
     const cfg0 = this.store.get()
 
+    // 🥚 彩蛋模块最先加载：L1 的 gateway 'login' 事件要用它（上线语）。
+    //    放在这里而不是 L3，是因为 NapCat 可能比 Mind 装配得更快 ——
+    //    那种情况下 `this.eggsModule` 会是 undefined，彩蛋就静默消失了。
+    this.eggsModule = await softImport('./src/mind/easter-eggs.js', log, 'mind/easter-eggs')
+
     // ── L1 NapCat ─────────────────────────────────────────────
     const gatewayMod = await softImport('./src/napcat/gateway.js', log, 'napcat/gateway')
     if (gatewayMod?.OneBotGateway) {
@@ -83,7 +88,11 @@ class Runtime {
           silenceWarnMs: cfg0.qq?.silenceWarnMs,
         })
         this.gateway.on?.('open', () => log.info('NapCat 已连接'))
-        this.gateway.on?.('login', ({ user_id }) => log.info(`茶茶酱上线：${user_id}`))
+        // 🥚 上线语每次重启换一句（见 src/mind/easter-eggs.js）
+        this.gateway.on?.('login', ({ user_id }) => {
+          const tail = this.eggsModule?.pickOne?.(this.eggsModule.STARTUP_LINES) ?? ''
+          log.info(`茶茶酱上线：${user_id}${tail ? `（${tail}）` : ''}`)
+        })
         this.gateway.on?.('stale', (ms) => log.warn(`上游静默 ${Math.round(ms / 1000)} 秒`))
         this.parts.gateway = true
       } catch (error) {
@@ -350,6 +359,8 @@ class Runtime {
           life,
           meme,
           qqTools,
+          // 🥚 彩蛋（深夜关怀）。传 null 也能跑 —— 所有调用都是 ?.
+          eggs: this.eggsModule ?? null,
         })
         this.parts.mind = this.mind.available
         if (!this.mind.available) log.warn('ctx.agents 不可用，Mind 处于离线状态（只记录不回复）')

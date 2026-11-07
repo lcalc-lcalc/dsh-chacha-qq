@@ -547,7 +547,22 @@ window.__ModuleLoader__.load({
       return `${(value / 1000000).toFixed(1)}M`
     }
 
-    /** 截断长文本（列表/标题都用它，CSS 的 ellipsis 只是兜底）。 */
+
+    // 🥚 空状态彩蛋文案（每次渲染随机一句）。
+    //    为什么随机：这个位置每天都会看到，「暂无数据」看多了人会麻。
+    //    为什么只有这几句：都是短句，且在窄侧栏里不会被截断。
+    const EMPTY_HINTS = [
+      '在 QQ 里给她发一句，2 秒内就会出现在这里',
+      '还没有任何消息。她大概在睡觉。',
+      '空空的，像她刚搬进来那天',
+      '这里会显示消息、思考过程和她调用的工具',
+      '发个「在吗」试试？',
+      '她还在等第一句话',
+    ]
+    function pickEmptyHint() {
+      return EMPTY_HINTS[Math.floor(Math.random() * EMPTY_HINTS.length)] || EMPTY_HINTS[0]
+    }
+      /** 截断长文本（列表/标题都用它，CSS 的 ellipsis 只是兜底）。 */
     function clip(text, max) {
       const value = String(text ?? '')
       const limit = Number(max) || 80
@@ -1873,7 +1888,7 @@ window.__ModuleLoader__.load({
           : [
             h('div', { key: 'a' }, [h('b', { key: 'b' }, '这里还没有消息')]),
             h('div', { key: 'b' }, conversation
-              ? '在 QQ 里给茶茶酱发一句，2 秒内就会出现在这里'
+              ? pickEmptyHint()
               : '先在左边选一个会话；或者点「全部会话」看混合流'),
           ])
         : h('div', { key: 'list', style: { display: 'contents' } }, messages.map((item, index) => {
