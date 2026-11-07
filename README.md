@@ -103,13 +103,19 @@ node scripts/probe-inbound.mjs 45
 ## 开发
 
 ```powershell
-npm test                # 16 个套件 / 2700+ 项，全离线（不连 QQ、不连 DSH）
-npm run probe:client    # 面板前端 129 项（假 ModuleLoader 真渲染）
+npm test                 # 17 个套件 / 2800+ 项，全离线（不连 QQ、不连 DSH）
+npm run probe:client     # 面板前端 129 项（假 ModuleLoader 真渲染）
 npm run probe:moderation # 群管接线
+npm run probe:qq         # QQ 到底在不在线（NapCat 活着 ≠ QQ 在线）
 ```
 
-架构契约在 [`docs/DESIGN.md`](docs/DESIGN.md)（**改代码前必读**）。
-踩过的坑、为什么这样设计、试过又扔掉什么 —— 全在 [`HANDOFF.md`](HANDOFF.md)（开发手记）。
+### 三份文档，别读错
+
+| 文档 | 什么时候读 |
+|---|---|
+| [`NEXT-HANDOFF.md`](NEXT-HANDOFF.md) | **接手现成代码 / 修 bug** → 现状快照 + 待办 + 十个坑 + 交付标准 |
+| [`docs/DESIGN.md`](docs/DESIGN.md) | **改架构 / 加模块** → 契约（改代码前必读） |
+| [`HANDOFF.md`](HANDOFF.md) | **好奇为什么要这样设计** → 来时路（踩过的坑、试过又扔掉的方案） |
 
 ---
 
